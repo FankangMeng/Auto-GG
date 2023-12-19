@@ -100,7 +100,7 @@ def create_protocol(dna_plate_map_dict, combinations_to_make, protocol_template_
 
 def main():
     st.image("Slowpoke.jpg", width=500)
-    st.title("Opentrons protocol generator for MoClo Transformation and Plating")
+    st.title("Opentrons protocol generator for MoClo assembly and transformation")
 
     # Sidebar for user inputs
     with st.sidebar:
