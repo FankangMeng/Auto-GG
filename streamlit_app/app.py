@@ -7,7 +7,6 @@ import os
 import time
 
 
-
 # Script's functions
 def process_plate_map_df(df):
     plate_map = []
@@ -96,37 +95,74 @@ def create_protocol(dna_plate_map_dict, combinations_to_make, protocol_template_
 
     return protocol_string
 
+
 def reset_state():
     st.session_state.process_data = False
+
 
 # from your_script import generate_plate_maps, generate_combinations,
 # check_number_of_combinations, generate_and_save_output_plate_maps, create_protocol
 # Clear the cache each time the app is re-run
 
+
 def main():
-    st.image("Slowpoke.jpg", width=500)
-    st.title("Opentrons protocol generator for MoClo assembly and transformation")
+    image1, image2, image3 = st.columns((2, 1.5, 2))
+    with image2:
+        st.image("Slowpoke.png", use_column_width="always")
+        # st.title("Slowpoke")
+
+    st.header("Opentrons protocol generator for MoClo assembly and transformation", divider='rainbow')
 
     if 'process_data' not in st.session_state:
         st.session_state.process_data = False
 
     # Sidebar for user inputs
     with st.sidebar:
-        st.header("Input Files")
-        dna_fixed_plate_map_file = st.file_uploader("Upload Fixed DNA Plate Map", type=["csv"])
-        dna_customised_plate_map_file = st.file_uploader("Upload Customised DNA Plate Map", type=["csv"])
-        combinations_file = st.file_uploader("Upload Combinations File", type=["csv"])
-        protocol_template_file = st.file_uploader("Upload Protocol Template File", type=["py"])
+        st.markdown('''
+            :red[Slowpoke] :orange[is] :green[easy] :blue[to] :violet[use]
+            :gray[by] :rainbow[everyone].''')
+        st.markdown("Authored by Fankang Meng from Imperial College London,"
+                    "it's designed for Opentrons protocol generation "
+                    "for MoClo YTK/STK/KTK Golden Gate assembly, transformation and plating. ")
+        st.link_button(":blue[Go to github]", "https://github.com/FankangMeng/Slowpoke/tree/main")
+        st.image("Opentrons_Logo.jpg")
+
+        # st.header("Input Files")
+        # moclo_plate_map_file = st.file_uploader(label="Upload Moclo parts map:dna:", type=["csv"])
+        # customised_plate_map_file = st.file_uploader("Upload customised parts map:dna:", type=["csv"])
+        # combinations_file = st.file_uploader("Upload assembly-info file", type=["csv"])
+        # protocol_template_file = st.file_uploader("Upload protocol template file", type=["py"])
+
+    # columns for user inputs
+    st.header("Input Files")
+    col1, col2 = st.columns(2)
+    with col1:
+        # st.header("A cat")
+        moclo_plate_map_file = st.file_uploader(label="Upload Moclo parts map:dna:", type=["csv"])
+
+    with col2:
+        # st.header("A dog")
+        customised_plate_map_file = st.file_uploader("Upload customised parts map:dna:", type=["csv"])
+
+    col3, col4 = st.columns(2)
+    with col3:
+        # st.header("An owl")
+        combinations_file = st.file_uploader("Upload assembly-info file", type=["csv"])
+
+    with col4:
+        # st.header("An owl")
+        protocol_template_file = st.file_uploader("Upload protocol template file", type=["py"])
 
     # Main page for processing and output
+    st.header("Protocol generation")
     if st.button("Process Data"):
-        st.session_state.process_data = dna_fixed_plate_map_file and dna_customised_plate_map_file and combinations_file
+        st.session_state.process_data = moclo_plate_map_file and customised_plate_map_file and combinations_file
     if st.session_state.process_data:
         try:
             try:
-            # Process files
-                fixed_plate_map_df = pd.read_csv(dna_fixed_plate_map_file, header=None)
-                customised_plate_map_df = pd.read_csv(dna_customised_plate_map_file, header=None)
+                # Process files
+                fixed_plate_map_df = pd.read_csv(moclo_plate_map_file, header=None)
+                customised_plate_map_df = pd.read_csv(customised_plate_map_file, header=None)
                 combinations_df = pd.read_csv(combinations_file, header=None)
             except Exception as e:
                 st.error(f"An error occurred at process files: {e}")
@@ -139,25 +175,24 @@ def main():
             combinations_to_make = generate_combinations(combinations_df)
             check_number_of_combinations(combinations_to_make)
 
-
             try:
-            # Generate and save output plate maps.
+                # Generate and save output plate maps.
                 output_plate_maps = generate_and_save_output_plate_maps(combinations_to_make)
             except Exception as e:
                 st.error(f"An error occurred at save plate maps: {e}")
 
             try:
-            # Create a protocol file.
+                # Create a protocol file.
                 protocol_string = create_protocol(dna_plate_map_dict, combinations_to_make, protocol_template_file)
             except Exception as e:
                 st.error(f"An error occurred at creating protocol: {e}")
 
             # Displaying Results - adapt as necessary
             st.success("Data processed successfully!")
-            #st.subheader("Output Plate Maps")
-            #st.write(output_plate_maps)
-            #st.subheader("Protocol")
-            #st.write(protocol_string)
+            # st.subheader("Output Plate Maps")
+            # st.write(output_plate_maps)
+            # st.subheader("Protocol")
+            # st.write(protocol_string)
 
             # Option to display or download the output
             st.download_button(label="Download Plate Map CSV",
@@ -170,8 +205,8 @@ def main():
                                file_name="protocol.py")
         except Exception as e:
             st.error(f"An error occurred: {e}")
-    #else:
-        #st.error("Please upload all required files.")
+    # else:
+    # st.error("Please upload all required files.")
 
 
 if __name__ == "__main__":
