@@ -4,6 +4,8 @@ import json
 import csv
 import io
 import os
+import time
+
 
 
 # Script's functions
@@ -94,13 +96,19 @@ def create_protocol(dna_plate_map_dict, combinations_to_make, protocol_template_
 
     return protocol_string
 
+def reset_state():
+    st.session_state.process_data = False
 
 # from your_script import generate_plate_maps, generate_combinations,
 # check_number_of_combinations, generate_and_save_output_plate_maps, create_protocol
+# Clear the cache each time the app is re-run
 
 def main():
     st.image("Slowpoke.jpg", width=500)
     st.title("Opentrons protocol generator for MoClo assembly and transformation")
+
+    if 'process_data' not in st.session_state:
+        st.session_state.process_data = False
 
     # Sidebar for user inputs
     with st.sidebar:
@@ -112,59 +120,58 @@ def main():
 
     # Main page for processing and output
     if st.button("Process Data"):
-        if dna_fixed_plate_map_file and dna_customised_plate_map_file and combinations_file:
+        st.session_state.process_data = dna_fixed_plate_map_file and dna_customised_plate_map_file and combinations_file
+    if st.session_state.process_data:
+        try:
             try:
-                try:
-                # Process files
-                    fixed_plate_map_df = pd.read_csv(dna_fixed_plate_map_file, header=None)
-                    customised_plate_map_df = pd.read_csv(dna_customised_plate_map_file, header=None)
-                    combinations_df = pd.read_csv(combinations_file, header=None)
-                except Exception as e:
-                    st.error(f"An error occurred at process files: {e}")
-                try:
-                    # Load in CSV files as a dict containing lists of lists.
-                    dna_plate_map_dict = generate_plate_maps(fixed_plate_map_df, customised_plate_map_df)
-                except Exception as e:
-                    st.error(f"An error occurred at dna_plate_map_dicts: {e}")
-
-                combinations_to_make = generate_combinations(combinations_df)
-                check_number_of_combinations(combinations_to_make)
-
-
-                try:
-                # Generate and save output plate maps.
-                    output_plate_maps = generate_and_save_output_plate_maps(combinations_to_make)
-                except Exception as e:
-                    st.error(f"An error occurred at save plate maps: {e}")
-
-                try:
-                # Create a protocol file.
-                    protocol_string = create_protocol(dna_plate_map_dict, combinations_to_make, protocol_template_file)
-                except Exception as e:
-                    st.error(f"An error occurred at creating protocol: {e}")
-
-                # Displaying Results - adapt as necessary
-                st.success("Data processed successfully!")
-                #st.subheader("Output Plate Maps")
-                #st.write(output_plate_maps)
-                #st.subheader("Protocol")
-                #st.write(protocol_string)
-
-                # Option to display or download the output
-                try:
-                    st.download_button(label="Download Plate Map CSV",
-                                       data=output_plate_maps,
-                                       file_name="plate_map.csv",
-                                       mime="text/csv")
-                    st.download_button(label="Download Protocol",
-                                       data=protocol_string,
-                                       file_name="protocol.py")
-                except Exception as e:
-                    st.error(f"An error occurred at download files: {e}")
+            # Process files
+                fixed_plate_map_df = pd.read_csv(dna_fixed_plate_map_file, header=None)
+                customised_plate_map_df = pd.read_csv(dna_customised_plate_map_file, header=None)
+                combinations_df = pd.read_csv(combinations_file, header=None)
             except Exception as e:
-                st.error(f"An error occurred: {e}")
-        else:
-            st.error("Please upload all required files.")
+                st.error(f"An error occurred at process files: {e}")
+            try:
+                # Load in CSV files as a dict containing lists of lists.
+                dna_plate_map_dict = generate_plate_maps(fixed_plate_map_df, customised_plate_map_df)
+            except Exception as e:
+                st.error(f"An error occurred at dna_plate_map_dicts: {e}")
+
+            combinations_to_make = generate_combinations(combinations_df)
+            check_number_of_combinations(combinations_to_make)
+
+
+            try:
+            # Generate and save output plate maps.
+                output_plate_maps = generate_and_save_output_plate_maps(combinations_to_make)
+            except Exception as e:
+                st.error(f"An error occurred at save plate maps: {e}")
+
+            try:
+            # Create a protocol file.
+                protocol_string = create_protocol(dna_plate_map_dict, combinations_to_make, protocol_template_file)
+            except Exception as e:
+                st.error(f"An error occurred at creating protocol: {e}")
+
+            # Displaying Results - adapt as necessary
+            st.success("Data processed successfully!")
+            #st.subheader("Output Plate Maps")
+            #st.write(output_plate_maps)
+            #st.subheader("Protocol")
+            #st.write(protocol_string)
+
+            # Option to display or download the output
+            st.download_button(label="Download Plate Map CSV",
+                               data=output_plate_maps,
+                               file_name="plate_map.csv",
+                               mime="text/csv")
+
+            st.download_button(label="Download Protocol",
+                               data=protocol_string,
+                               file_name="protocol.py")
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
+    #else:
+        #st.error("Please upload all required files.")
 
 
 if __name__ == "__main__":
