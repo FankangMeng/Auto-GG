@@ -96,6 +96,16 @@ def create_protocol(dna_plate_map_dict, combinations_to_make, protocol_template_
     return protocol_string
 
 
+def create_download_button(file_path, label, file_name):
+    with open(file_path, 'rb') as file:
+        st.download_button(
+            label=label,
+            data=file,
+            file_name=file_name,
+            mime="text/plain"
+        )
+
+
 def reset_state():
     st.session_state.process_data = False
 
@@ -106,10 +116,10 @@ def reset_state():
 
 
 def main():
-    image1, image2, image3 = st.columns((2, 1.5, 2))
-    with image2:
-        st.image("Slowpoke.png", use_column_width="always")
-        # st.title("Slowpoke")
+    #image1, image2, image3 = st.columns((2, 1.5, 2))
+    #with image2:
+        #st.image("Slowpoke.png", use_column_width="always")
+    #st.title("Slowpoke")
 
     st.header("Opentrons protocol generator for MoClo assembly and transformation", divider='rainbow')
 
@@ -118,14 +128,39 @@ def main():
 
     # Sidebar for user inputs
     with st.sidebar:
+        image1, image2, image3 = st.columns((1, 3, 1))
+        with image2:
+            st.image("Slowpoke.png", use_column_width="always")
+            # st.title("Slowpoke")
         st.markdown('''
             :red[Slowpoke] :orange[is] :green[easy] :blue[to] :violet[use]
             :gray[by] :rainbow[everyone].''')
         st.markdown("Authored by Fankang Meng from Imperial College London,"
                     "it's designed for Opentrons protocol generation "
                     "for MoClo YTK/STK/KTK Golden Gate assembly, transformation and plating. ")
-        st.link_button(":blue[Go to github]", "https://github.com/FankangMeng/Slowpoke/tree/main")
-        st.image("Opentrons_Logo.jpg")
+        link1, link2 = st.columns((1,1))
+        with link1:
+            st.link_button(":blue[Github]", "https://github.com/FankangMeng/Slowpoke/tree/main")
+        with link2:
+            st.link_button(":blue[Ellis lab]", "https://www.tomellislab.com/")
+
+        st.subheader('Download template files', divider='rainbow')
+
+        files_to_download = [
+            ('template_files/fixed_input_dna_map.csv', "moclo_plate_template", "fixed_input_dna_map.csv"),
+            ('template_files/customised_input_dna_map.csv', "customised_plate_template",
+             "customised_input_dna_map_template.csv"),
+            ('template_files/combination-to-make.csv', "combinations_template",
+             "combination-to-make.csv"),
+            ('template_files/template_BsmbI_moclo_protocol_EP_tubes.py', "opentrons_protocol_template",
+             "template_BsmbI_moclo_protocol_EP_tubes.py"),
+        ]
+        # Iterate and create download buttons
+        for file_path, label, file_name in files_to_download:
+            create_download_button(file_path, label, file_name)
+
+        st.image("CSynB_Logo_text.png")
+        st.image("imperial.png")
 
         # st.header("Input Files")
         # moclo_plate_map_file = st.file_uploader(label="Upload Moclo parts map:dna:", type=["csv"])
@@ -203,6 +238,7 @@ def main():
             st.download_button(label="Download Protocol",
                                data=protocol_string,
                                file_name="protocol.py")
+
         except Exception as e:
             st.error(f"An error occurred: {e}")
     # else:
