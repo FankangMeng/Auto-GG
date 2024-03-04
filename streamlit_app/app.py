@@ -121,7 +121,7 @@ def main():
         #st.image("Slowpoke.png", use_column_width="always")
     #st.title("Auto-GG")
 
-    st.header("Auto-GG: Opentrons protocol generator for MoClo assembly and transformation", divider='rainbow')
+    st.header("Auto-GG: Opentrons protocol generator for MoClo assembly, transformation and colony PCR", divider='rainbow')
 
     if 'process_data' not in st.session_state:
         st.session_state.process_data = False
