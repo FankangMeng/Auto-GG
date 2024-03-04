@@ -135,7 +135,7 @@ def main():
         st.markdown('''
             :red[Slowpoke] :orange[is] :green[easy] :blue[to] :violet[use]
             :gray[by] :rainbow[everyone].''')
-        st.markdown("Authored by Fankang Meng from Imperial College London,"
+        st.markdown("Authored by Fankang Meng & Koray Malci from Imperial College London,"
                     "it's designed for Opentrons protocol generation "
                     "for MoClo YTK/STK/KTK Golden Gate assembly, transformation and plating. ")
         link1, link2 = st.columns((1,1))
@@ -160,7 +160,7 @@ def main():
             create_download_button(file_path, label, file_name)
 
         st.image("CSynB_Logo_text.png")
-        st.image("imperial.png")
+        st.image("Imperial.png")
 
         # st.header("Input Files")
         # moclo_plate_map_file = st.file_uploader(label="Upload Moclo parts map:dna:", type=["csv"])
