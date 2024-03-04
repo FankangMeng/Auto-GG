@@ -119,9 +119,9 @@ def main():
     #image1, image2, image3 = st.columns((2, 1.5, 2))
     #with image2:
         #st.image("Slowpoke.png", use_column_width="always")
-    #st.title("Slowpoke")
+    #st.title("Auto-GG")
 
-    st.header("Slowpoke: Opentrons protocol generator for MoClo assembly and transformation", divider='rainbow')
+    st.header("Auto-GG: Opentrons protocol generator for MoClo assembly and transformation", divider='rainbow')
 
     if 'process_data' not in st.session_state:
         st.session_state.process_data = False
@@ -131,7 +131,7 @@ def main():
         image1, image2, image3 = st.columns((1, 3, 1))
         with image2:
             st.image("Slowpoke.png", use_column_width="always")
-            # st.title("Slowpoke")
+            # st.title("Auto-GG")
         st.markdown('''
             :blue[Auto-GG] :orange[is] :green[easy] :red[to] :violet[use]
             :gray[by] :rainbow[everyone].''')
@@ -140,7 +140,7 @@ def main():
                     "for MoClo YTK/STK/KTK Golden Gate assembly, transformation and plating. ")
         link1, link2 = st.columns((1,1))
         with link1:
-            st.link_button(":blue[Github]", "https://github.com/FankangMeng/Slowpoke/tree/main")
+            st.link_button(":blue[Github]", "https://github.com/FankangMeng/Auto-GG/tree/main")
         with link2:
             st.link_button(":blue[Ellis lab]", "https://www.tomellislab.com/")
 
