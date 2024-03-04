@@ -133,7 +133,7 @@ def main():
             st.image("Slowpoke.png", use_column_width="always")
             # st.title("Slowpoke")
         st.markdown('''
-            :red[Slowpoke] :orange[is] :green[easy] :blue[to] :violet[use]
+            :blue[Auto-GG] :orange[is] :green[easy] :red[to] :violet[use]
             :gray[by] :rainbow[everyone].''')
         st.markdown("Authored by Fankang Meng & Koray Malci from Imperial College London,"
                     "it's designed for Opentrons protocol generation "
